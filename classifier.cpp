@@ -5,6 +5,7 @@
 #include <sstream>
 #include <fstream>
 #include <cassert>
+#include <cmath>
 
 std::vector<int> dataReader(std::istream& in) {
     std::string curLine;
@@ -16,17 +17,36 @@ std::vector<int> dataReader(std::istream& in) {
     std::stringstream unsplitLine(curLine);
     std::string data;
 
+    dataTuple.push_back(1); // x0 is always 1
+
     while(std::getline(unsplitLine, data, delimiter)) {
         dataTuple.push_back(std::stoi(data));
     }
 
-    in.ignore();
-
     return dataTuple;
 }
 
+template <typename T>
+double sig(const T z) {
+    return 1 / (1 + exp(-z));
+}
+
+double getDelta(const std::vector<double>& weights, const std::vector<int>& data) {
+    double ycap;
+    double sum = 0;
+    double delta;
+
+    for(int i = 0; i < weights.size(); ++i) {
+        sum += weights[i] * data[i];
+    }
+    ycap = sig(sum);
+
+    delta = data[data.size() - 1] - ycap; // y(e) - ycap
+    return delta;
+} 
+
 int main(int argc, char **argv) {
-    const int NUM_WEIGHTS = 5;
+    const int NUM_WEIGHTS = 3;
     const int NUM_ITERATIONS = 100;
     srand(1);
 
@@ -59,11 +79,10 @@ int main(int argc, char **argv) {
         while(!fin.eof()) {
             // gets the data from the file
             tuple = dataReader(fin);
-
-            assert(tuple.size() == 3);
-
-            // clear the data for next iteration
-            tuple.clear();
+            for(std::size_t i = 0; i < tuple.size(); ++i) {
+                std::cout << tuple[i] << ", ";
+            }
+            std::cout << std::endl;
         }
 
         // reset fin to the top of file
