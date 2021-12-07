@@ -1,0 +1,17 @@
+-15.9348 0.215382 0.156915 
+0.254947
+
+CS-5001: HW#1
+Programmer: Noah E. Klein
+
+TRAINING:
+Using learning rate eta = 0.001
+Using 100000 iterations.
+
+LEARNED:
+w0 = -15.9348
+w1 = 0.215382
+w2 = 0.156915
+
+VALIDATION
+Sum-of-Squares Error = 0.254947
